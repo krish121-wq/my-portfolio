@@ -12,6 +12,8 @@ class Product extends Model
     protected $fillable = [
         'category_id',
         'subcategory_id',
+        'brand_id',     
+        'color_id',
         'name',
         'image',
         'price',
@@ -31,4 +33,15 @@ class Product extends Model
         // Yaha hum Subcategory Model nahi, balki Category Model use karenge
         return $this->belongsTo(Category::class, 'subcategory_id');
     }
+
+    public function brand()
+{
+    return $this->belongsTo(Brand::class, 'brand_id');
+}
+
+// Color ke sath rishta
+public function color()
+{
+    return $this->belongsTo(Color::class, 'color_id');
+}
 }

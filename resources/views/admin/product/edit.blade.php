@@ -90,6 +90,42 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-4">
+                                    <label class="form-label fw-bold text-secondary text-uppercase text-xs">Brand</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                                            <i class="fa-solid fa-certificate text-warning"></i>
+                                        </span>
+                                        <select name="brand_id" class="form-select form-select-lg border-start-0 rounded-end-pill bg-light">
+                                            <option value="">Choose Brand (Optional)...</option>
+                                            @foreach($brands as $brand)
+                                                {{-- Check kar raha hai ki purana brand kaunsa tha --}}
+                                                <option value="{{ $brand->id }}" {{ old('brand_id', $OurProduct->brand_id) == $brand->id ? 'selected' : '' }}>
+                                                    {{ $brand->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label fw-bold text-secondary text-uppercase text-xs">Color</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                                            <i class="fa-solid fa-palette text-danger"></i>
+                                        </span>
+                                        <select name="color_id" class="form-select form-select-lg border-start-0 rounded-end-pill bg-light">
+                                            <option value="">Choose Color (Optional)...</option>
+                                            @foreach($colors as $color)
+                                                {{-- Check kar raha hai ki purana color kaunsa tha --}}
+                                                <option value="{{ $color->id }}" style="background-color: {{ $color->code }}; color: #fff; text-shadow: 1px 1px 2px #000;" {{ old('color_id', $OurProduct->color_id) == $color->id ? 'selected' : '' }}>
+                                                    {{ $color->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
                                     <label class="form-label fw-bold text-secondary text-uppercase text-xs">Selling Price (₹) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">

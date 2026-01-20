@@ -3,35 +3,45 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;  // Make sure model name starts with Capital P
-use App\Models\Category; // Make sure model name starts with Capital C
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Brand;
+use App\Models\Color;
 
 class ProductController extends Controller
 {
-    public function index(){
-        $OurProduct = Product::all();
+    public function index()
+    {
+        // Relationship ke sath load kiya taaki Brands/Colors table me dikha sakein
+        $OurProduct = Product::with(['category', 'brand', 'color'])->get();
         return view('admin.product.product', compact('OurProduct'));
     }
 
-    public function create(){
-        // 1. Yaha 'Product::all()' tha, maine 'Category::all()' kar diya
-        $categories = Category::all(); 
-        $subcategories = Category::all();
-        return view('admin.product.create', compact('categories', 'subcategories'));
+    public function create()
+    {
+        $categories = Category::where('parent_id', 0)->get(); // Assuming parent categories
+        $subcategories = Category::where('parent_id', '!=', 0)->get(); // Assuming subcategories
+        $brands = Brand::all();
+        $colors = Color::all();
+
+        return view('admin.product.create', compact('categories', 'subcategories', 'brands', 'colors'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $validateData = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|integer',
-            'subcategory_id' => 'required|integer', // Min/max removed for simplicity, works better
+            'subcategory_id' => 'nullable|integer',
+            'brand_id' => 'nullable|exists:brands,id',
+            'color_id' => 'nullable|exists:colors,id',
             'price' => 'required|integer',
             'mrp' => 'required|integer',
             'description' => 'required|string',
             'image' => 'nullable|image|max:2048',
         ]);
 
-        if($request->hasfile('image')){
+        if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('img'), $imageName);
             $validateData['image'] = $imageName;
@@ -41,44 +51,56 @@ class ProductController extends Controller
         return redirect()->route('product.index')->with('success', 'Product created successfully');
     }
 
-    public function show(string $id){ // 'stirng' spelling fixed to 'string'
-        $product = Product::with('category')->findOrFail($id); // 'products' changed to 'Product'
+    public function show(string $id)
+    {
+        $product = Product::with(['category', 'brand', 'color'])->findOrFail($id);
         return view('admin.product.show', compact('product'));
     }
 
-    public function edit(string $id){
+    public function edit(string $id)
+    {
+        $OurProduct = Product::findOrFail($id);
         $categories = Category::all();
-        $subcategories = Category::all();
-        $OurProduct = Product::findOrFail($id); // 'products' changed to 'Product'
-        return view('admin.product.edit', compact('OurProduct', 'categories', 'subcategories'));
+        $subcategories = Category::all(); // Adjust logic as per your DB structure
+        $brands = Brand::all();
+        $colors = Color::all();
+
+        return view('admin.product.edit', compact('OurProduct', 'categories', 'subcategories', 'brands', 'colors'));
     }
 
-    public function update(Request $request, string $id){
+    public function update(Request $request, string $id)
+    {
         $validateData = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|integer',
-            'subcategory_id' => 'required|integer',
+            'subcategory_id' => 'nullable|integer',
+            'brand_id' => 'nullable|exists:brands,id',
+            'color_id' => 'nullable|exists:colors,id',
             'price' => 'required|integer',
             'mrp' => 'required|integer',
             'description' => 'required|string',
-            'image' => 'nullable|image|max:2048',  
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        $product = Product::findOrFail($id); // 'products' changed to 'Product'
+        $product = Product::findOrFail($id);
 
-        if($request->hasfile('image')){
-             $imageName = time() . '.' . $request->image->extension();
+        if ($request->hasFile('image')) {
+            // Optional: Delete old image here if needed
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('img'), $imageName);
-            // 2. Variable spelling fix: $validatedData -> $validateData
-            $validateData['image'] = $imageName; 
+            $validateData['image'] = $imageName;
         }
 
         $product->update($validateData);
-        return redirect()->route('product.index')->with('success', 'Data updated successfully');
+        return redirect()->route('product.index')->with('success', 'Product updated successfully');
     }
 
-    public function destroy(string $id){
-        $product = Product::findOrFail($id); // 'products' changed to 'Product'
+    public function destroy(string $id)
+    {
+        $product = Product::findOrFail($id);
+        if ($product->image && file_exists(public_path('img/' . $product->image))) {
+            unlink(public_path('img/' . $product->image)); // Delete image file
+        }
         $product->delete();
         return redirect()->route('product.index')->with('success', 'Product deleted successfully');
     }

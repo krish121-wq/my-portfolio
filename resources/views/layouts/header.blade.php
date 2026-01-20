@@ -30,6 +30,7 @@
 	<link rel="stylesheet" href="{{ asset('assest/css/ion.rangeSlider.skinFlat.css')}}" />
 	<link rel="stylesheet" href="{{ asset('assest/css/magnific-popup.css')}}">
 	<link rel="stylesheet" href="{{ asset('assest/css/main.css')}}">
+	
 </head>
 
 <body>
@@ -56,7 +57,7 @@
 								 aria-expanded="false">Shop</a>
 								<ul class="dropdown-menu">
 									<li class="nav-item"><a class="nav-link" href="{{ route('shop')}}">Shop</a></li>
-									<li class="nav-item"><a class="nav-link" href="{{ route('single-product')}}">Product Details</a></li>
+									<li class="nav-item"><a class="nav-link" href="{{ route('shop')}}">Product Details</a></li>
 									<li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li>
 									<li class="nav-item"><a class="nav-link" href="{{ route('carts') }}">Shopping Cart</a></li>
 									<li class="nav-item"><a class="nav-link" href="{{ route('wishlist') }}">Shopping Wishlist</a></li>

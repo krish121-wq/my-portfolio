@@ -47,7 +47,6 @@
                                     <select name="category_id" class="form-select form-select-lg border-start-0 rounded-end-pill bg-light @error('category_id') is-invalid @enderror">
                                         <option value="" selected disabled>Choose a Category...</option>
                                         @foreach($categories as $category)
-                                            {{-- Sirf Main Categories dikhane ke liye logic --}}
                                             <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                                 {{ $category->category }}
                                             </option>
@@ -66,7 +65,6 @@
                                     <select name="subcategory_id" class="form-select form-select-lg border-start-0 rounded-end-pill bg-light @error('subcategory_id') is-invalid @enderror">
                                         <option value="" selected>Choose a Subcategory (Optional)...</option>
                                         @foreach($subcategories as $subcat)
-                                            {{-- Sirf wahi dikhayenge jisme subcategory available ho --}}
                                             @if($subcat->subcategory)
                                                 <option value="{{ $subcat->id }}" {{ old('subcategory_id') == $subcat->id ? 'selected' : '' }}>
                                                     {{ $subcat->category }} > {{ $subcat->subcategory }}
@@ -89,6 +87,40 @@
                                 @error('name') <span class="text-danger small ms-3 mt-1 d-block">{{ $message }}</span> @enderror
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label fw-bold text-secondary text-uppercase text-xs">Brand</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                                            <i class="fa-solid fa-certificate text-warning"></i>
+                                        </span>
+                                        <select name="brand_id" class="form-select form-select-lg border-start-0 rounded-end-pill bg-light">
+                                            <option value="">Choose Brand (Optional)...</option>
+                                            @foreach($brands as $brand)
+                                                <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
+                                                    {{ $brand->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label fw-bold text-secondary text-uppercase text-xs">Color</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                                            <i class="fa-solid fa-palette text-danger"></i>
+                                        </span>
+                                        <select name="color_id" class="form-select form-select-lg border-start-0 rounded-end-pill bg-light">
+                                            <option value="">Choose Color (Optional)...</option>
+                                            @foreach($colors as $color)
+                                                <option value="{{ $color->id }}" style="background-color: {{ $color->code }}; color: #fff; text-shadow: 1px 1px 2px #000;" {{ old('color_id') == $color->id ? 'selected' : '' }}>
+                                                    {{ $color->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label fw-bold text-secondary text-uppercase text-xs">Selling Price (₹) <span class="text-danger">*</span></label>
@@ -157,7 +189,6 @@
 </div>
 
 <style>
-    /* Same CSS as Category Page */
     .form-control:focus, .form-select:focus { box-shadow: none; border-color: #4e73df; background-color: #fff; }
     .input-group-text { border-color: #d1d3e2; }
     .form-control, .form-select { border-color: #d1d3e2; }
@@ -166,7 +197,6 @@
 </style>
 
 <script>
-    // Simple Image Preview
     document.getElementById('imageInput').onchange = function (evt) {
         const [file] = this.files
         if (file) {

@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
 <div class="main-content w-100"> 
-    <div class="container-fluid py-4"> <div class="row mb-4 align-items-center justify-content-center">
+    <div class="container-fluid py-4"> 
+        <div class="row mb-4 align-items-center justify-content-center">
             <div class="col-xl-10 col-lg-11">
                 <div class="row align-items-center">
                     <div class="col-md-8">
@@ -33,7 +34,8 @@
         @endif
 
         <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11"> <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="col-xl-10 col-lg-11"> 
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
                     <div class="card-header border-0 p-0" style="height: 6px; background: linear-gradient(90deg, #4e73df, #36b9cc, #1cc88a);"></div>
                     <div class="card-body p-4">
                         <div class="table-responsive">
@@ -43,7 +45,8 @@
                                         <th class="ps-4 py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">ID</th>
                                         <th class="py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Product Info</th>
                                         <th class="py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Category</th>
-                                        <th class="py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">SubCategory</th>
+                                        <th class="py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Brand</th>
+                                        <th class="py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Color</th>
                                         <th class="py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Price</th> 
                                         <th class="py-3 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">MRP</th>   
                                         <th class="py-3 text-end pe-4 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Actions</th>
@@ -71,22 +74,38 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-info bg-opacity-10 text-info border border-info rounded-pill px-3">
-                                                {{ $item->category->category ?? 'Uncategorized' }}
-                                            </span>
+                                            <div class="d-flex flex-column">
+                                                <span class="badge bg-info bg-opacity-10 text-info border border-info rounded-pill px-3 mb-1" style="width: fit-content;">
+                                                    {{ $item->category->category ?? 'Uncategorized' }}
+                                                </span>
+                                                @if($item->subcategory)
+                                                    <span class="text-xs text-muted ms-1">
+                                                        <i class="fa-solid fa-level-up-alt fa-rotate-90 me-1"></i>
+                                                        {{ $item->subcategory->subcategory }} </span>
+                                                @endif
+                                            </div>
                                         </td>
 
-     <td>
-    {{-- Check karein agar relation data laya hai --}}
-    @if($item->subcategory)
-        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary rounded-pill px-3">
-            {{-- Ab ye categories table ke 'subcategory' column ko show karega --}}
-            {{ $item->subcategory->subcategory }}
-        </span>
-    @else
-        <span class="text-muted small">-</span>
-    @endif
-</td>
+                                        <td>
+                                            @if($item->brand)
+                                                <span class="badge bg-secondary bg-opacity-10 text-dark border border-secondary rounded-pill px-3">
+                                                    {{ $item->brand->name }}
+                                                </span>
+                                            @else
+                                                <span class="text-muted small">-</span>
+                                            @endif
+                                        </td>
+
+                                        <td>
+                                            @if($item->color)
+                                                <div class="d-flex align-items-center" title="{{ $item->color->name }}">
+                                                    <span class="border shadow-sm me-2" style="width: 20px; height: 20px; border-radius: 50%; background-color: {{ $item->color->code }};"></span>
+                                                    <span class="text-dark small fw-bold">{{ $item->color->name }}</span>
+                                                </div>
+                                            @else
+                                                <span class="text-muted small">-</span>
+                                            @endif
+                                        </td>
                                         
                                         <td>
                                             <span class="fw-bold text-dark fs-6">₹{{ number_format($item->price, 2) }}</span>
@@ -101,7 +120,6 @@
                                                 <a href="{{ route('product.edit', $item->id) }}" class="btn btn-light btn-sm rounded-circle text-primary hover-primary" title="Edit">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
-                                                
                                                 <form action="{{ route('product.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
                                                     @csrf
                                                     @method('DELETE')
@@ -129,14 +147,12 @@
     .hover-primary:hover { background-color: #4e73df !important; color: white !important; }
     .hover-danger:hover { background-color: #e74a3b !important; color: white !important; }
     
-    /* Pagination Color Fix */
     .dataTables_wrapper .dataTables_paginate .paginate_button.current {
         background: #4e73df !important; color: white !important; border: 1px solid #4e73df !important;
     }
     .dataTables_wrapper .dataTables_filter input {
         border: 1px solid #d1d3e2; border-radius: 20px; padding: 5px 15px;
     }
-    /* Thoda chhota font table ke liye */
     .table-sm > :not(caption) > * > * { padding: 0.5rem 0.5rem; }
 </style>
 

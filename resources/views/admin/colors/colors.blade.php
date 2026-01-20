@@ -2,7 +2,7 @@
 
 @section('content')
 
-{{-- 1. CSS Links (Directly inside content as per your working Category page) --}}
+{{-- 1. CSS Links --}}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
 <div class="main-content w-100"> 
@@ -10,12 +10,12 @@
         
         <div class="row mb-4 align-items-center">
             <div class="col-md-8">
-                <h2 class="fw-bold text-dark mb-1">Brand Manager</h2>
-                <p class="text-muted mb-0" style="font-size: 0.95rem;">Organize your brand catalog efficiently.</p>
+                <h2 class="fw-bold text-dark mb-1">Color Manager</h2>
+                <p class="text-muted mb-0" style="font-size: 0.95rem;">Organize your product colors efficiently.</p>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <a href="{{ route('brands.create') }}" class="btn btn-primary btn-lg shadow-sm rounded-pill px-4" style="background: linear-gradient(45deg, #4e73df, #224abe); border:none;">
-                    <i class="fa-solid fa-plus-circle me-2"></i>Add New Brand
+                <a href="{{ route('colors.create') }}" class="btn btn-primary btn-lg shadow-sm rounded-pill px-4" style="background: linear-gradient(45deg, #4e73df, #224abe); border:none;">
+                    <i class="fa-solid fa-plus-circle me-2"></i>Add New Color
                 </a>
             </div>
         </div>
@@ -33,49 +33,61 @@
                     <div class="card-header border-0 p-0" style="height: 6px; background: linear-gradient(90deg, #4e73df, #36b9cc, #1cc88a);"></div>
                     <div class="card-body p-4">
                         <div class="table-responsive">
-                            {{-- Table ID must match the script --}}
                             <table id="myDataTable" class="table table-hover align-middle custom-table" style="width:100%">
                                 <thead class="bg-light">
                                     <tr>
                                         <th class="ps-4 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">ID</th>
-                                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Brand Name</th>
-                                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Slug</th>
-                                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Active</th>
+                                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Color Name</th>
+                                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Visual (Code)</th>
+                                        {{-- Fixed: Added Status Header --}}
+                                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Status</th>
                                         <th class="text-end pe-4 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($brands as $brand)
+                                    @foreach ($colors as $color)
                                     <tr class="transition-hover">
                                         <td class="ps-4">
-                                            <span class="badge bg-light text-secondary border">#{{ $brand->id }}</span>
+                                            <span class="badge bg-light text-secondary border">#{{ $color->id }}</span>
                                         </td>
+                                        
+                                        {{-- Column 2: Name --}}
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                                    <i class="fa-solid fa-folder-open text-primary fs-5"></i>
+                                                    <i class="fa-solid fa-signature text-primary fs-5"></i>
                                                 </div>
                                                 <div>
-                                                    <h6 class="mb-0 fw-bold text-dark">{{ $brand->name }}</h6>
+                                                    <h6 class="mb-0 fw-bold text-dark">{{ $color->name }}</h6>
                                                 </div>
                                             </div>
                                         </td>
+
+                                        {{-- Column 3: Visual & Hex Code --}}
                                         <td>
-                                            @if($brand->slug)
-                                                <span class="badge bg-info bg-opacity-10 text-info border border-info rounded-pill px-3">{{ $brand->slug }}</span>
-                                            @else
-                                                <span class="text-muted small"><em>No Brands</em></span>
-                                            @endif
+                                            <div class="d-flex align-items-center">
+                                                {{-- Color Circle --}}
+                                                <span class="shadow-sm me-3" style="display:inline-block; width: 35px; height: 35px; border-radius: 50%; background-color: {{ $color->code }}; border: 2px solid #fff; box-shadow: 0 0 5px rgba(0,0,0,0.1);"></span>
+                                                
+                                                {{-- Hex Code --}}
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-dark" style="font-family: monospace;">{{ $color->code }}</h6>
+                                                </div>
+                                            </div>
                                         </td>
+                                        
+                                        {{-- Column 4: Status (Ab Header match karega) --}}
                                         <td>
                                             <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2">Active</span>
                                         </td>
+
+                                        {{-- Column 5: Actions --}}
                                         <td class="text-end pe-4">
                                             <div class="d-inline-flex gap-2">
-                                                <a href="{{ route('brands.edit', $brand->id) }}" class="btn btn-light btn-sm rounded-circle text-primary hover-primary" title="Edit">
+                                                <a href="{{ route('colors.edit', $color->id) }}" class="btn btn-light btn-sm rounded-circle text-primary hover-primary" title="Edit">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
-                                                <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
+                                                <form action="{{ route('colors.destroy', $color->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-light btn-sm rounded-circle text-danger hover-danger" title="Delete">
@@ -110,7 +122,7 @@
     }
 </style>
 
-{{-- 3. Scripts (jQuery included manually as per your working Category page) --}}
+{{-- 3. Scripts --}}
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -119,7 +131,7 @@
     $(document).ready(function() {
         $('#myDataTable').DataTable({
             "pageLength": 10,
-            "language": { "search": "", "searchPlaceholder": "Search records..." },
+            "language": { "search": "", "searchPlaceholder": "Search colors..." },
             "dom": '<"d-flex justify-content-between align-items-center mb-3"lf>rt<"d-flex justify-content-between align-items-center mt-3"ip>'
         });
     });

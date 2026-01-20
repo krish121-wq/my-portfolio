@@ -10,6 +10,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ColorController;
 use App\Http\Middleware\AdminAuth;
 
 Route::controller(MainAuthController::class)->group(function () {
@@ -41,10 +43,8 @@ Route::get('wishlist', [WishlistController::class, 'index'])->name('wishlist');
 Route::post('/wishlist/add', [WishlistController::class, 'addtowishlist'])->name('wishlist.add');
 Route::get('/delete-wishlist/{id}', [WishlistController::class, 'deleteWishlist'])->name('deleteWishlist');
 
-Route::patch('/update-cart-ajax', [CartController::class, 'updateCartAjax'])->name('cart.update.ajax');
-Route::get('single-product', function () {
-    return view('main.single-product');
-})->name('single-product');
+// ID dynamic hogi
+Route::get('/product/details/{id}', [App\Http\Controllers\ShopController::class, 'single_product'])->name('single_product');
 
 
 Route::prefix('admin')->group(function () {
@@ -61,6 +61,8 @@ Route::prefix('admin')->group(function () {
         Route::view('/', 'admin.index')->name('admin.dashboard');
         Route::resource('category', CategoryController::class);
         Route::resource('product', ProductController::class);
+        Route::resource('brands', BrandController::class);
+        Route::resource('colors', ColorController::class);
     });
 
 });

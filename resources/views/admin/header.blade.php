@@ -57,6 +57,18 @@
                 <i class="fa-solid fa-folder-tree"></i> Product
             </a>
         </li>
+
+         <li class="nav-item">
+            <a href="{{ route('brands.index') }}" class="nav-link {{ request()->routeIs('brands.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-folder-tree"></i> Brands
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('colors.index') }}" class="nav-link {{ request()->routeIs('colors.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-folder-tree"></i> Colors
+            </a>
+        </li>
         
         <li class="nav-item mt-4"><span class="text-uppercase text-muted fs-7 px-3 fw-bold">Settings</span></li>
         
